@@ -1,0 +1,22 @@
+table {
+    border-collapse: collapse;
+    margin: 0 auto;
+  }
+  
+td {
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid black;
+}
+
+input[type="text"] {
+    width: 300px;
+    margin-top: 1%;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+

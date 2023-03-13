@@ -1,9 +1,9 @@
 const btn = document.getElementById("btn");
-let textboxValue = ""
-let base = 1
-let tries = 0
-let fiveLetterWords = []
-let actualWord = ""
+let textboxValue = "";
+let base = 1;
+let tries = 0;
+let fiveLetterWords = [];
+let actualWord = "";
 
 function getGuess(){
 
@@ -23,8 +23,10 @@ function getGuess(){
 
 function getActual(){
 
+    console.log(fiveLetterWords)
     let randomIndex = Math.floor(Math.random() * fiveLetterWords.length);
     actualWord = fiveLetterWords[randomIndex];
+    console.log(`Random word: ${actualWord}`)
 
 }
 
@@ -53,18 +55,20 @@ function checkGuess(){
         return false
     }
 
-    if (!(textboxValue in fiveLetterWords)){
+    if (!(fiveLetterWords.includes(textboxValue))){
         alert("Must be valid five letter word ! ")
         return false 
     }
 
-
     for (let i = 0; i < 5; i++){
-        if (actualWord[i] === textboxValue[i]){
-            colourBoxes(base + i, greenyellow)
+        if (actualWord.charAt(i) === textboxValue.charAt(i)){
+            colourBoxes(base + i, 'greenyellow')
         }
-        else if (actualWord[i] in textboxValue){
-            colourBoxes(base + i, yellow)
+        else if (actualWord.includes(textboxValue[i])){
+            colourBoxes(base + i, 'yellow')
+        }
+        else{
+            continue
         }
     }
 
@@ -88,35 +92,20 @@ function addRow(){
 }
 
 function getWords(){
-    // Create a new XMLHttpRequest object
-    const xhr = new XMLHttpRequest();
+    fetch('https://raw.githubusercontent.com/dwyl/english-words/master/words.txt')
+    .then(response => response.text())
+    .then(words => {
+        fiveLetterWords = words.split('\n').filter(word => word.length === 5).map(word => word.toUpperCase());
+        getActual();
 
-    // Set the URL of the file containing the list of words
-    const url = 'https://raw.githubusercontent.com/dwyl/english-words/master/words.txt';
-
-    // Open a connection to the URL
-    xhr.open('GET', url, true);
-
-    // When the connection is opened, send the request
-    xhr.onload = function() {
-    // If the response status is OK (200)
-    if (xhr.status === 200) {
-            // Split the response into an array of words
-            const words = xhr.responseText.split('\n');
-            
-            // Filter the words to only include those that are 5 letters long
-            fiveLetterWords = words.filter(word => word.length === 5);
-            
-        }
-    };
-
-    // Send the request
-    xhr.send();
+    })
+    .catch(error => console.error(error));
 
 }
 
 function colourBoxes(num, colour){
-
+    document.getElementById(num.toString()).style.backgroundColor = colour
 }
 
+getWords();
 getGuess();
